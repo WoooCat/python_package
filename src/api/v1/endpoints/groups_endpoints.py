@@ -1,20 +1,25 @@
 from flask import request
 from flask_restful import Resource
-from src.db import Base, engine, Session
-from src.db.repository.group_repository import GroupRepository
-
-Base.metadata.create_all(engine)
+from src.db import Session
+from src.db.repository.groups_repository import GroupRepository
 
 
-class GroupListResource(Resource):
+class GroupResource(Resource):
     def __init__(self):
         self.session = Session()
         self.group_repo = GroupRepository(self.session)
 
-    def get(self):
+    def get(self, group_id=None):
         try:
-            groups = self.group_repo.get_all_groups()
-            return {'groups': [{'id': group.id, 'name': group.name} for group in groups]}
+            if group_id is None:
+                groups = self.group_repo.get_all_groups()
+                return {'groups': [{'id': group.id, 'name': group.name} for group in groups]}
+            else:
+                group = self.group_repo.get_group_by_id(group_id)
+                if group:
+                    return {'id': group.id, 'name': group.name}
+                else:
+                    return {'error': 'Group not found'}
         except Exception as e:
             self.session.rollback()
             return {'error': str(e)}
@@ -27,25 +32,6 @@ class GroupListResource(Resource):
             name = data.get('name')
             group = self.group_repo.create_group(name)
             return {'message': 'Group created successfully', 'group_id': group.id}
-        except Exception as e:
-            self.session.rollback()
-            return {'error': str(e)}
-        finally:
-            self.group_repo.close_session()
-
-
-class GroupResource(Resource):
-    def __init__(self):
-        self.session = Session()
-        self.group_repo = GroupRepository(self.session)
-
-    def get(self, group_id):
-        try:
-            group = self.group_repo.get_group_by_id(group_id)
-            if group:
-                return {'id': group.id, 'name': group.name}
-            else:
-                return {'error': 'Group not found'}
         except Exception as e:
             self.session.rollback()
             return {'error': str(e)}
