@@ -10,21 +10,16 @@ class StudentResource(Resource):
         self.student_repo = StudentRepository(self.session)
 
     def get(self, student_id=None):
-        try:
-            if student_id is None:
-                students = self.student_repo.get_all_students()
-                return {'students': [{'id': student.id, 'first_name': student.first_name, 'last_name': student.last_name} for student in students]}
+        if not student_id:
+            students = self.student_repo.get_all_students()
+            return {'groups': [student.to_dict() for student in students]}, 200
+        else:
+            group = self.student_repo.get_student_by_id(student_id)
+            if group:
+                return group.to_dict(), 200
             else:
-                student = self.student_repo.get_student_by_id(student_id)
-                if student:
-                    return {'id': student.id, 'first_name': student.first_name, 'last_name': student.last_name}
-                else:
-                    return {'error': 'Student not found'}
-        except Exception as e:
-            self.session.rollback()
-            return {'error': str(e)}
-        finally:
-            self.student_repo.close_session()
+                return {'error': 'Student not found'}, 404
+
 
     def post(self):
         try:

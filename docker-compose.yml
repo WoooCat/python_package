@@ -1,0 +1,24 @@
+version: '3'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ../test_10_sql/Dockerfile_server
+    ports:
+      - 5001:5000
+    networks:
+      - mynetwork
+  db:
+    build:
+      context: .
+      dockerfile: ../test_10_sql/DockerfileDbWorked
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    networks:
+      - mynetwork
+networks:
+  mynetwork:

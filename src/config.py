@@ -18,7 +18,7 @@ class DevelopmentConfig(Configuration):
 class TestingConfig(Configuration):
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:postgres@localhost:5432/test_api_db"
+    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:postgres@localhost:5432/test_university_db"
 
 
 class Config(str, Enum):

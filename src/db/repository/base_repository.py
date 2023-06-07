@@ -1,4 +1,19 @@
+from contextlib import contextmanager
 from sqlalchemy.exc import SQLAlchemyError
+# from sqlalchemy.orm import Session
+
+
+
+@contextmanager
+def session_scope(session):
+    try:
+        yield session
+        session.commit()
+    except SQLAlchemyError as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
 
 
 class BaseRepository:
@@ -6,11 +21,7 @@ class BaseRepository:
         self.session = session
 
     def commit_changes(self):
-        try:
-            self.session.commit()
-        except SQLAlchemyError as e:
-            self.session.rollback()
-            raise e
+        self.session.commit()
 
     def close_session(self):
         self.session.close()
