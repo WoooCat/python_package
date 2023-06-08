@@ -1,11 +1,13 @@
 from flask import request
-from flask_restful import Resource
+# from flask_restful import Resource
+from flask_restx import Resource
 from src.db import Session
 from src.db.repository.students_repository import StudentRepository
 
 
 class StudentResource(Resource):
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.session = Session()
         self.student_repo = StudentRepository(self.session)
 

@@ -1,11 +1,13 @@
 from flask import request
-from flask_restful import Resource
+# from flask_restful import Resource
+from flask_restx import Resource
 from src.db import Session
 from src.db.repository.groups_repository import GroupRepository
 
 
 class GroupResource(Resource):
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.session = Session()
         self.group_repo = GroupRepository(self.session)
 
@@ -45,7 +47,8 @@ class GroupResource(Resource):
 
 
 class GroupStudentResource(Resource):
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.session = Session()
         self.group_repository = GroupRepository(self.session)
 

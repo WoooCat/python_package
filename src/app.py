@@ -1,8 +1,10 @@
 from flask import Flask, g
-from flask_restful import Api
+# from flask_restful import Api
+from flask_restx import Api
 from .api.v1.endpoints.groups_endpoints import GroupResource, GroupStudentResource
 from .api.v1.endpoints.students_endpoints import StudentResource
 from .api.v1.endpoints.course_endpoints import CourseResource, CourseStudentResource
+
 
 app = Flask(__name__)
 api = Api(app)
