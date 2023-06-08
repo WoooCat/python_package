@@ -2,7 +2,6 @@ from flask import request
 from flask_restful import Resource
 from src.db import Session
 from src.db.repository.groups_repository import GroupRepository
-from src.db.repository.students_repository import StudentRepository
 
 
 class GroupResource(Resource):
@@ -20,6 +19,7 @@ class GroupResource(Resource):
                 return group.to_dict(), 200
             else:
                 return {'error': 'Group not found'}, 404
+
 
     def post(self):
         data = request.get_json()
