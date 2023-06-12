@@ -6,7 +6,7 @@ from .student_model import student_course_relation
 
 
 class CourseModel(BaseModel):
-    __tablename__ = 'course_model'
+    __tablename__ = "course_model"
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -14,8 +14,4 @@ class CourseModel(BaseModel):
     students = relationship("StudentModel", secondary=student_course_relation, back_populates="courses")
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description
-        }
+        return {"id": self.id, "name": self.name, "description": self.description}

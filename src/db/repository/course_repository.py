@@ -5,7 +5,6 @@ from ..models.student_model import StudentModel
 
 
 class CourseRepository(BaseRepository):
-
     def get_all_courses(self):
         courses = self.session.query(CourseModel).all()
         return courses

@@ -3,8 +3,8 @@ from .base import BaseModel
 
 
 student_course_relation = Table(
-    'student_course_relation',
+    "student_course_relation",
     BaseModel.metadata,
-    Column('student_id', Integer, ForeignKey('student_model.id')),
-    Column('course_id', Integer, ForeignKey('course_model.id'))
+    Column("student_id", Integer, ForeignKey("student_model.id")),
+    Column("course_id", Integer, ForeignKey("course_model.id")),
 )

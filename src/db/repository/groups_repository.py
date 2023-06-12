@@ -4,7 +4,6 @@ from ..models.student_model import StudentModel
 from typing import List, Optional
 
 
-
 class GroupRepository(BaseRepository):
     def get_all_groups(self) -> List[GroupModel]:
         groups = self.session.query(GroupModel).all()
@@ -49,7 +48,3 @@ class GroupRepository(BaseRepository):
                 student.group_id = None
                 self.commit_changes()
                 return student
-
-
-
-

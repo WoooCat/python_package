@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "University API"
+version = "0.1.0"
+description = "University API with Sqlalchemy"
+authors = ["woocat <digtyar.vadim@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10.11"
+flask = "2.3.2"
+flask-restx = "^1.1.0"
+psycopg2-binary = "^2.9.6"
+sqlalchemy = "^2.0.15"
+
+
+[tool.flake8]
+exclude = '__init__.py'
+max-line-length = 120
+
+[tool.black]
+line-lenght = 120
+exclude = '\.venv/'
