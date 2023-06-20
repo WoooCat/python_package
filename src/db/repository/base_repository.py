@@ -1,8 +1,6 @@
 from contextlib import contextmanager
 from sqlalchemy.exc import SQLAlchemyError
 
-# from sqlalchemy.orm import Session
-
 
 @contextmanager
 def session_scope(session):
@@ -23,5 +21,3 @@ class BaseRepository:
     def commit_changes(self):
         self.session.commit()
 
-    def close_session(self):
-        self.session.close()

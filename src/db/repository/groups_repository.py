@@ -22,7 +22,6 @@ class GroupRepository(BaseRepository):
         group = self.get_group_by_id(group_id)
         if group:
             group.name = name
-            self.commit_changes()
         return group
 
     def delete_group(self, group_id: int) -> Optional[GroupModel]:

@@ -1,4 +1,8 @@
+import os
 from enum import Enum
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Configuration:
@@ -6,13 +10,13 @@ class Configuration:
 
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = ""
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class DevelopmentConfig(Configuration):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:postgres@db:5432/university_db"
+    # SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:postgres@localhost:5432/api_db"
 
 
 class TestingConfig(Configuration):

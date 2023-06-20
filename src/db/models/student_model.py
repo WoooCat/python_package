@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from .base import BaseModel
-from .student_course_relation import student_course_relation
+from .student_course_relation_model import StudentCourseRelationModel
 
 
 class StudentModel(BaseModel):
@@ -11,7 +11,7 @@ class StudentModel(BaseModel):
     first_name = Column(String)
     last_name = Column(String)
     group = relationship("GroupModel", back_populates="students")
-    courses = relationship("CourseModel", secondary=student_course_relation, overlaps="students")
+    courses = relationship("CourseModel", secondary=StudentCourseRelationModel.__table__, overlaps="students")
 
     def to_dict(self):
         serialized_data = {

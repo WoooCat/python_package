@@ -1,9 +1,10 @@
 from flask import request
 from flask_restx import Resource
 
-from src.api_utils import api, doc_group_model
+from src.api_utils import api
 from src.db import Session
 from src.db.repository.groups_repository import GroupRepository
+from src.schemas.group_schemas import create_group_schema, get_group_schema
 
 
 class GroupResource(Resource):
@@ -12,6 +13,7 @@ class GroupResource(Resource):
         self.session = Session()
         self.group_repo = GroupRepository(self.session)
 
+    @api.doc(model=get_group_schema)
     def get(self, group_id=None):
         """Get a group by ID or retrieve all groups"""
         if not group_id:
@@ -24,7 +26,8 @@ class GroupResource(Resource):
             else:
                 return {"error": "Group not found"}, 404
 
-    @api.expect(doc_group_model)
+    @api.doc(model=get_group_schema)
+    @api.expect(create_group_schema)
     def post(self):
         """Create a new group"""
         data = request.get_json()
@@ -32,7 +35,8 @@ class GroupResource(Resource):
         group = self.group_repo.create_group(name)
         return group.to_dict(), 201
 
-    @api.expect(doc_group_model)
+    @api.doc(model=get_group_schema)
+    @api.expect(create_group_schema)
     def put(self, group_id):
         """Update a group by ID"""
         data = request.get_json()

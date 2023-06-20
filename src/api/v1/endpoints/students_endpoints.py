@@ -1,9 +1,11 @@
 from flask import request
 
-from src.api_utils import api, doc_student_model
+from src.api_utils import api
 from src.db import Session
 from src.db.repository.students_repository import StudentRepository
 from flask_restx import Resource
+
+from src.schemas.student_schemas import create_update_student_schema, get_student_schema
 
 
 class StudentResource(Resource):
@@ -12,6 +14,7 @@ class StudentResource(Resource):
         self.session = Session()
         self.student_repo = StudentRepository(self.session)
 
+    @api.doc(model=get_student_schema)
     def get(self, student_id: int = None):
         """Get Student by ID or all Students"""
         if not student_id:
@@ -24,7 +27,8 @@ class StudentResource(Resource):
             else:
                 return {"error": "Student not found"}, 404
 
-    @api.expect(doc_student_model)
+    @api.doc(model=get_student_schema)
+    @api.expect(create_update_student_schema)
     def post(self):
         """Create new Student"""
         data = request.get_json()
@@ -33,7 +37,8 @@ class StudentResource(Resource):
         student = self.student_repo.create_student(first_name, last_name)
         return student.to_dict(), 201
 
-    @api.expect(doc_student_model)
+    @api.doc(model=get_student_schema)
+    @api.expect(create_update_student_schema)
     def put(self, student_id):
         """Update Student by ID"""
         data = request.get_json()
