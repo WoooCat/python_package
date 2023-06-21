@@ -1,9 +1,12 @@
+from typing import Any, Dict, List, Tuple, Union
+
 from flask import request
 from flask_restx import Resource
 
-from src.api_utils import doc_course_model, api
+from src.api_utils import api
 from src.db import Session
 from src.db.repository.course_repository import CourseRepository
+from src.schemas.cource_schemas import create_course_schema, get_course_schema
 
 
 class CourseResource(Resource):
@@ -12,7 +15,8 @@ class CourseResource(Resource):
         self.session = Session()
         self.course_repo = CourseRepository(self.session)
 
-    def get(self, course_id: int = None):
+    @api.doc(model=get_course_schema)
+    def get(self, course_id: int = None) -> Tuple[Union[Dict[str, Any], Tuple[List[Dict[str, Any]], int]], int]:
         """Get Course by ID or all Courses"""
         if not course_id:
             courses = self.course_repo.get_all_courses()
@@ -24,8 +28,9 @@ class CourseResource(Resource):
             else:
                 return {"error": "Course not found"}, 404
 
-    @api.expect(doc_course_model)
-    def post(self):
+    @api.doc(model=get_course_schema)
+    @api.expect(create_course_schema)
+    def post(self) -> Tuple[Dict[str, Any], int]:
         """Create new Course"""
         data = request.get_json()
         name = data.get("name")
@@ -33,8 +38,9 @@ class CourseResource(Resource):
         group = self.course_repo.create_course(name=name, description=description)
         return group.to_dict(), 201
 
-    @api.expect(doc_course_model)
-    def put(self, course_id: int = None):
+    @api.doc(model=get_course_schema)
+    @api.expect(create_course_schema)
+    def put(self, course_id: int = None) -> Tuple[Union[Dict[str, Any], Dict[str, str]], int]:
         """Update Course by ID"""
         data = request.get_json()
         name = data.get("name")
@@ -45,7 +51,7 @@ class CourseResource(Resource):
         else:
             return {"error": "Course not found"}, 404
 
-    def delete(self, course_id):
+    def delete(self, course_id: int) -> Tuple[Union[Dict[str, Any], Dict[str, str]], int]:
         """Delete Course by ID"""
         course = self.course_repo.delete_course(course_id)
         if course:
@@ -60,7 +66,7 @@ class CourseStudentResource(Resource):
         self.session = Session()
         self.course_repository = CourseRepository(self.session)
 
-    def put(self, course_id, student_id):
+    def put(self, course_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
         """Assign Student to Course"""
         course_student = self.course_repository.assign_student_to_course(course_id, student_id)
         if course_student:
@@ -68,7 +74,7 @@ class CourseStudentResource(Resource):
         else:
             return {"message": f"Course with id: '{course_id}' or Student with id: '{student_id}' not found"}, 404
 
-    def patch(self, course_id, student_id):
+    def patch(self, course_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
         """Remove Student from Course"""
         course_student = self.course_repository.remove_student_from_course(course_id, student_id)
         if course_student:

@@ -1,7 +1,8 @@
 from flask import Flask
+
+from .api.v1.endpoints.course_endpoints import CourseResource, CourseStudentResource
 from .api.v1.endpoints.groups_endpoints import GroupResource, GroupStudentResource
 from .api.v1.endpoints.students_endpoints import StudentResource
-from .api.v1.endpoints.course_endpoints import CourseResource, CourseStudentResource
 from .api_utils import api
 
 

@@ -1,3 +1,5 @@
+from typing import Any, Dict, Tuple
+
 from flask import request
 from flask_restx import Resource
 
@@ -14,7 +16,7 @@ class GroupResource(Resource):
         self.group_repo = GroupRepository(self.session)
 
     @api.doc(model=get_group_schema)
-    def get(self, group_id=None):
+    def get(self, group_id: int = None) -> Tuple[Dict[str, Any], int]:
         """Get a group by ID or retrieve all groups"""
         if not group_id:
             groups = self.group_repo.get_all_groups()
@@ -28,7 +30,7 @@ class GroupResource(Resource):
 
     @api.doc(model=get_group_schema)
     @api.expect(create_group_schema)
-    def post(self):
+    def post(self) -> Tuple[Dict[str, Any], int]:
         """Create a new group"""
         data = request.get_json()
         name = data.get("name")
@@ -37,7 +39,7 @@ class GroupResource(Resource):
 
     @api.doc(model=get_group_schema)
     @api.expect(create_group_schema)
-    def put(self, group_id):
+    def put(self, group_id: int) -> Tuple[Dict[str, Any], int]:
         """Update a group by ID"""
         data = request.get_json()
         name = data.get("name")
@@ -47,7 +49,7 @@ class GroupResource(Resource):
         else:
             return {"error": "Group not found"}, 404
 
-    def delete(self, group_id):
+    def delete(self, group_id: int) -> Tuple[Dict[str, Any], int]:
         """Delete a group by ID"""
         group = self.group_repo.delete_group(group_id)
         if group:
@@ -62,7 +64,7 @@ class GroupStudentResource(Resource):
         self.session = Session()
         self.group_repository = GroupRepository(self.session)
 
-    def put(self, group_id, student_id):
+    def put(self, group_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
         """Assign Student to Group"""
         group_student = self.group_repository.assign_student_to_group(group_id, student_id)
         if group_student:
@@ -70,7 +72,7 @@ class GroupStudentResource(Resource):
         else:
             return {"message": f"Group with id: '{group_id}' or Student with id: '{student_id}' not found"}, 404
 
-    def delete(self, group_id, student_id):
+    def delete(self, group_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
         """Remove Student from Group"""
         group = self.group_repository.remove_student_from_group(group_id, student_id)
         if group:

@@ -1,15 +1,16 @@
 ## Flask UNIVERSITY API
 
-
-## Build and Run docker-compose containers
-```python
-docker-compose up -d
+Run the following command to start the PostgreSQL containers:
+```bash
+make run
 ```
 
-## STOP and DELETE docker-compose containers
-```python
-docker-compose down -v
+Run the following command to start the PostgreSQL containers:
+```bash
+make stop
 ```
 
-## Swagger page (will be work after Build and Run docker-compose containers):
-`http://127.0.0.1:5001`
+Swagger page (will be work after Build and Run docker-compose containers):
+```bash
+http://127.0.0.1:5001
+```

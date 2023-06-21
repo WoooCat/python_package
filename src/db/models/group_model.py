@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from .base import BaseModel
 
+from .base import BaseModel
 from .student_model import StudentModel  # noqa
 
 

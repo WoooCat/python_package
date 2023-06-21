@@ -4,8 +4,9 @@ services:
   server:
     build:
       context: .
-      dockerfile: ./DockerfileServer
+      dockerfile: ./compose/server/DockerfileServer
     container_name: server
+    env_file: .env
     ports:
       - 5001:5001
     networks:
@@ -19,7 +20,7 @@ services:
   db:
     build:
       context: .
-      dockerfile: ./DockerfileDb
+      dockerfile: ./compose/db/DockerfileDb
     container_name: db
     env_file: .env
     ports:
@@ -32,7 +33,7 @@ services:
     networks:
       - mynetwork
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres -d postgres'"]
       retries: 5
       interval: 5s
       start_period: 5s

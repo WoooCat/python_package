@@ -1,0 +1,7 @@
+CREATE DATABASE university_db;
+
+CREATE USER postgres WITH PASSWORD 'postgres';
+
+GRANT ALL PRIVILEGES ON DATABASE university_db TO postgres;
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;

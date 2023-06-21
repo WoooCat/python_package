@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -20,4 +21,3 @@ class BaseRepository:
 
     def commit_changes(self):
         self.session.commit()
-
