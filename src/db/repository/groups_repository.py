@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from ..models.group_model import GroupModel
 from ..models.student_model import StudentModel
-from .base_repository import BaseRepository
+from .base_repository import BaseRepository, session_scope
 
 
 class GroupRepository(BaseRepository):
@@ -26,6 +26,7 @@ class GroupRepository(BaseRepository):
         group = self.get_group_by_id(group_id)
         if group:
             group.name = name
+            self.commit_changes()
         return group
 
     def delete_group(self, group_id: int) -> Optional[GroupModel]:

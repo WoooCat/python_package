@@ -4,7 +4,7 @@ services:
   server:
     build:
       context: .
-      dockerfile: ./compose/server/DockerfileServer
+      dockerfile: compose/server/Dockerfile
     container_name: server
     env_file: .env
     ports:
@@ -20,7 +20,7 @@ services:
   db:
     build:
       context: .
-      dockerfile: ./compose/db/DockerfileDb
+      dockerfile: compose/db/Dockerfile
     container_name: db
     env_file: .env
     ports:

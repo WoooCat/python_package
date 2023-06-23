@@ -1,11 +1,11 @@
 ## Flask UNIVERSITY API
 
-Run the following command to start the PostgreSQL containers:
+Run the following command to build and run the PostgreSQL containers:
 ```bash
 make run
 ```
 
-Run the following command to start the PostgreSQL containers:
+Run the following command to stop the PostgreSQL containers:
 ```bash
 make stop
 ```

@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, List
 
 from flask import request
 from flask_restx import Resource
@@ -9,41 +9,56 @@ from src.db.repository.groups_repository import GroupRepository
 from src.schemas.group_schemas import create_group_schema, get_group_schema
 
 
+class GroupsResource(Resource):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    @api.doc(model=get_group_schema)
+    def get(self) -> Tuple[Dict[str, List], int]:
+        """Get all groups"""
+        session = Session()
+        group_repo = GroupRepository(session)
+        groups = group_repo.get_all_groups()
+        return {"groups": [group.to_dict() for group in groups]}, 200
+
+
+
 class GroupResource(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.session = Session()
-        self.group_repo = GroupRepository(self.session)
 
     @api.doc(model=get_group_schema)
     def get(self, group_id: int = None) -> Tuple[Dict[str, Any], int]:
-        """Get a group by ID or retrieve all groups"""
-        if not group_id:
-            groups = self.group_repo.get_all_groups()
-            return {"groups": [group.to_dict() for group in groups]}, 200
+        """Get a group by ID"""
+        session = Session()
+        group_repo = GroupRepository(session)
+        group = group_repo.get_group_by_id(group_id)
+        if group:
+            return group.to_dict(), 200
         else:
-            group = self.group_repo.get_group_by_id(group_id)
-            if group:
-                return group.to_dict(), 200
-            else:
-                return {"error": "Group not found"}, 404
+            return {"error": "Group not found"}, 404
+
 
     @api.doc(model=get_group_schema)
     @api.expect(create_group_schema)
     def post(self) -> Tuple[Dict[str, Any], int]:
         """Create a new group"""
+        session = Session()
+        group_repo = GroupRepository(session)
         data = request.get_json()
         name = data.get("name")
-        group = self.group_repo.create_group(name)
+        group = group_repo.create_group(name)
         return group.to_dict(), 201
 
     @api.doc(model=get_group_schema)
     @api.expect(create_group_schema)
     def put(self, group_id: int) -> Tuple[Dict[str, Any], int]:
         """Update a group by ID"""
+        session = Session()
+        group_repo = GroupRepository(session)
         data = request.get_json()
         name = data.get("name")
-        group = self.group_repo.update_group(group_id, name)
+        group = group_repo.update_group(group_id, name)
         if group:
             return group.to_dict(), 200
         else:
@@ -51,7 +66,9 @@ class GroupResource(Resource):
 
     def delete(self, group_id: int) -> Tuple[Dict[str, Any], int]:
         """Delete a group by ID"""
-        group = self.group_repo.delete_group(group_id)
+        session = Session()
+        group_repo = GroupRepository(session)
+        group = group_repo.delete_group(group_id)
         if group:
             return {"message": "Group removed successfully"}, 200
         else:
@@ -61,12 +78,12 @@ class GroupResource(Resource):
 class GroupStudentResource(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.session = Session()
-        self.group_repository = GroupRepository(self.session)
 
     def put(self, group_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
         """Assign Student to Group"""
-        group_student = self.group_repository.assign_student_to_group(group_id, student_id)
+        session = Session()
+        group_repository = GroupRepository(session)
+        group_student = group_repository.assign_student_to_group(group_id, student_id)
         if group_student:
             return {"message": f"Student with id: {student_id} successfully added to the group"}, 200
         else:
@@ -74,7 +91,9 @@ class GroupStudentResource(Resource):
 
     def delete(self, group_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
         """Remove Student from Group"""
-        group = self.group_repository.remove_student_from_group(group_id, student_id)
+        session = Session()
+        group_repository = GroupRepository(session)
+        group = group_repository.remove_student_from_group(group_id, student_id)
         if group:
             return {"message": f"Student with id: {student_id} successfully removed from Group"}, 200
         else:
