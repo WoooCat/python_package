@@ -14,7 +14,7 @@ class CoursesResource(Resource):
         super().__init__(*args, **kwargs)
 
     @api.doc(model=get_course_schema)
-    def get(self) -> Tuple[Union[Dict[str, Any], Tuple[List[Dict[str, Any]], int]], int]:
+    def get(self) -> Tuple[Dict[str, List[Dict[str, Any]]], int]:
         """Get all Courses"""
         session = Session()
         course_repo = CourseRepository(session)
@@ -27,7 +27,7 @@ class CourseResource(Resource):
         super().__init__(*args, **kwargs)
 
     @api.doc(model=get_course_schema)
-    def get(self, course_id: int) -> Tuple[Union[Dict[str, Any], Tuple[List[Dict[str, Any]], int]], int]:
+    def get(self, course_id: int) -> Tuple[Union[Dict[str, str], Any], int]:
         """Get Course by ID"""
         session = Session()
         course_repo = CourseRepository(session)
@@ -49,7 +49,7 @@ class CourseResource(Resource):
 
     @api.doc(model=get_course_schema)
     @api.expect(create_course_schema)
-    def put(self, course_id: int = None) -> Tuple[Union[Dict[str, Any], Dict[str, str]], int]:
+    def patch(self, course_id: int = None) -> Tuple[Union[Dict[str, Any], Dict[str, str]], int]:
         """Update Course by ID"""
         session = Session()
         course_repo = CourseRepository(session)
@@ -66,7 +66,7 @@ class CourseResource(Resource):
         course_repo = CourseRepository(session)
         course = course_repo.delete_course(course_id)
         if course:
-            return {"message": "Course deleted successfully", "course_id": course.id}, 200
+            return {"message": "Course deleted successfully", "course_id": course.id}, 204
         else:
             return {"error": "Course not found"}, 404
 
@@ -75,13 +75,13 @@ class CourseStudentResource(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def put(self, course_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
+    def post(self, course_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
         """Assign Student to Course"""
         session = Session()
         course_repository = CourseRepository(session)
         course_student = course_repository.assign_student_to_course(course_id, student_id)
         if course_student:
-            return {"message": f"Student with id: {student_id} successfully added to the Course"}, 200
+            return {"message": f"Student with id: '{student_id} successfully added to the Course"}, 200
         else:
             return {"message": f"Course with id: '{course_id}' or Student with id: '{student_id}' not found"}, 404
 
@@ -91,6 +91,6 @@ class CourseStudentResource(Resource):
         course_repository = CourseRepository(session)
         course_student = course_repository.remove_student_from_course(course_id, student_id)
         if course_student:
-            return {"message": f"Student with id: {student_id} successfully removed from Course"}, 200
+            return {"message": f"Student with id: '{student_id}' successfully removed from Course"}, 200
         else:
             return {"message": f"Course with id: '{course_id}' or Student with id: '{student_id}' not found"}, 404

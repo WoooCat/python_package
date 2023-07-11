@@ -15,6 +15,11 @@ Removing all stopped Docker images:
 make clear
 ```
 
+Get Docker images status:
+```bash
+make status
+```
+
 Swagger page (will be work after Build and Run docker-compose containers):
 ```bash
 http://127.0.0.1:5001

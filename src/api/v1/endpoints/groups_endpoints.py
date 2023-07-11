@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple, List
+from typing import Any, Dict, Tuple, List, Union
 
 from flask import request
 from flask_restx import Resource
@@ -14,7 +14,7 @@ class GroupsResource(Resource):
         super().__init__(*args, **kwargs)
 
     @api.doc(model=get_group_schema)
-    def get(self) -> Tuple[Dict[str, List], int]:
+    def get(self) -> Tuple[Dict[str, List[Dict[str, Any]]], int]:
         """Get all groups"""
         session = Session()
         group_repo = GroupRepository(session)
@@ -22,13 +22,12 @@ class GroupsResource(Resource):
         return {"groups": [group.to_dict() for group in groups]}, 200
 
 
-
 class GroupResource(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     @api.doc(model=get_group_schema)
-    def get(self, group_id: int = None) -> Tuple[Dict[str, Any], int]:
+    def get(self, group_id: int = None) -> Tuple[Union[Dict[str, str], Any], int]:
         """Get a group by ID"""
         session = Session()
         group_repo = GroupRepository(session)
@@ -39,8 +38,8 @@ class GroupResource(Resource):
             return {"error": "Group not found"}, 404
 
 
-    @api.doc(model=get_group_schema)
     @api.expect(create_group_schema)
+    @api.response(201, 'Group created successfully', model=get_group_schema)
     def post(self) -> Tuple[Dict[str, Any], int]:
         """Create a new group"""
         session = Session()
@@ -52,7 +51,7 @@ class GroupResource(Resource):
 
     @api.doc(model=get_group_schema)
     @api.expect(create_group_schema)
-    def put(self, group_id: int) -> Tuple[Dict[str, Any], int]:
+    def patch(self, group_id: int) -> Tuple[Dict[str, Any], int]:
         """Update a group by ID"""
         session = Session()
         group_repo = GroupRepository(session)
@@ -79,13 +78,13 @@ class GroupStudentResource(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def put(self, group_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
+    def post(self, group_id: int, student_id: int) -> Tuple[Dict[str, str], int]:
         """Assign Student to Group"""
         session = Session()
         group_repository = GroupRepository(session)
         group_student = group_repository.assign_student_to_group(group_id, student_id)
         if group_student:
-            return {"message": f"Student with id: {student_id} successfully added to the group"}, 200
+            return {"message": f"Student with id: '{student_id}' successfully added to the group"}, 200
         else:
             return {"message": f"Group with id: '{group_id}' or Student with id: '{student_id}' not found"}, 404
 
@@ -95,6 +94,6 @@ class GroupStudentResource(Resource):
         group_repository = GroupRepository(session)
         group = group_repository.remove_student_from_group(group_id, student_id)
         if group:
-            return {"message": f"Student with id: {student_id} successfully removed from Group"}, 200
+            return {"message": f"Student with id: '{student_id}' successfully removed from Group"}, 200
         else:
             return {"message": f"Group with id: '{group_id}' or Student with id: '{student_id}' not found"}, 404

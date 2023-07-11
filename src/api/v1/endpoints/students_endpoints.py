@@ -14,7 +14,7 @@ class StudentsResource(Resource):
         super().__init__(*args, **kwargs)
 
     @api.doc(model=get_student_schema)
-    def get(self) -> Tuple[Dict[str, List], int]:
+    def get(self) -> Tuple[Dict[str, List[Dict[str, Any]]], int]:
         """Get all Students"""
         session = Session()
         students_repo = StudentRepository(session)
@@ -27,7 +27,7 @@ class StudentResource(Resource):
         super().__init__(*args, **kwargs)
 
     @api.doc(model=get_student_schema)
-    def get(self, student_id: int = None) -> Tuple[Union[Dict[str, Any], Tuple[List[Dict[str, Any]], int]], int]:
+    def get(self, student_id: int = None) -> Tuple[Union[Dict[str, str], Any], int]:
         """Get Student by ID or all Students"""
         session = Session()
         student_repo = StudentRepository(session)
@@ -39,7 +39,7 @@ class StudentResource(Resource):
 
     @api.doc(model=get_student_schema)
     @api.expect(create_update_student_schema)
-    def post(self) -> Tuple[Dict[str, Any], int]:
+    def post(self) -> Tuple[Union[Dict[str, str], Any], int]:
         """Create new Student"""
         session = Session()
         student_repo = StudentRepository(session)
@@ -49,7 +49,7 @@ class StudentResource(Resource):
 
     @api.doc(model=get_student_schema)
     @api.expect(create_update_student_schema)
-    def put(self, student_id) -> Tuple[Union[Dict[str, Any], Dict[str, str]], int]:
+    def patch(self, student_id) -> Tuple[Union[Dict[str, str], Any], int]:
         """Update Student by ID"""
         session = Session()
         student_repo = StudentRepository(session)
@@ -60,7 +60,7 @@ class StudentResource(Resource):
         else:
             return {"error": "Student not found"}, 404
 
-    def delete(self, student_id) -> Tuple[Union[Dict[str, Any], Dict[str, str]], int]:
+    def delete(self, student_id) -> Tuple[Dict[str, str], int]:
         """Delete Student by ID"""
         session = Session()
         student_repo = StudentRepository(session)

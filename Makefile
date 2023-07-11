@@ -9,3 +9,7 @@ stop:
 # Removing all stopped Docker images
 clear:
 	@@docker images -q | xargs -r docker rmi -f
+
+# Get Docker Images status
+status:
+	@docker ps -a

@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from ..models.group_model import GroupModel
 from ..models.student_model import StudentModel
-from .base_repository import BaseRepository, session_scope
+from .base_repository import BaseRepository
 
 
 class GroupRepository(BaseRepository):
@@ -18,7 +18,8 @@ class GroupRepository(BaseRepository):
         """Create Group"""
         group = GroupModel(name=name)
         self.session.add(group)
-        self.commit_changes()
+        # self.session.flush()
+        self.session.commit()
         return group
 
     def update_group(self, group_id: int, name: str) -> Optional[GroupModel]:
@@ -57,3 +58,7 @@ class GroupRepository(BaseRepository):
                 self.commit_changes()
                 return student
         return None
+
+    def get_students_in_group(self, group_id: int):
+        """Get All Students in Group"""
+        return self.session.query(StudentModel).filter(StudentModel.group_id == group_id).all()

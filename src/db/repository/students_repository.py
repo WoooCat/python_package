@@ -18,6 +18,7 @@ class StudentRepository(BaseRepository):
         student = StudentModel(first_name=first_name, last_name=last_name, group_id=group_id)
         self.session.add(student)
         self.commit_changes()
+        # self.session.flush()
         return student
 
     def update_student(self, student_id: int, **kwargs) -> Optional[StudentModel]:

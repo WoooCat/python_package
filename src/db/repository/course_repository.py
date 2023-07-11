@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from .. import StudentCourseRelationModel
 from ..models.course_model import CourseModel
 from ..models.student_model import StudentModel
 from .base_repository import BaseRepository
@@ -14,10 +15,11 @@ class CourseRepository(BaseRepository):
         """Get Course by ID"""
         return self.session.query(CourseModel).filter_by(id=course_id).first()
 
-    def create_course(self, name: str, description: str) -> Optional[CourseModel]:
+    def create_course(self, name: str, description: str = None) -> Optional[CourseModel]:
         """Create Course"""
         course = CourseModel(name=name, description=description)
         self.session.add(course)
+
         self.session.commit()
         return course
 
@@ -58,3 +60,7 @@ class CourseRepository(BaseRepository):
                 self.session.commit()
                 return True
         return None
+
+    def get_all_courses_for_student(self, student_id: int):
+        """Get All Courses for Student"""
+        return self.session.query(StudentCourseRelationModel).filter(StudentCourseRelationModel.student_id == student_id).all()
