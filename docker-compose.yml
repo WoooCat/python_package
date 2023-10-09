@@ -38,8 +38,30 @@ services:
       interval: 5s
       start_period: 5s
 
+  test_db:
+    build:
+      context: .
+      dockerfile: compose/test_db/Dockerfile
+    container_name: test_db
+    env_file: .env
+    ports:
+      - 5433:5433
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - TEST_DB:/var/lib/postgresql/test_data
+    networks:
+      - mynetwork
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d postgres'" ]
+      retries: 5
+      interval: 5s
+      start_period: 5s
+
 networks:
   mynetwork:
 
 volumes:
   DB:
+  TEST_DB:

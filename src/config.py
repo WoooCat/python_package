@@ -22,7 +22,7 @@ class DevelopmentConfig(Configuration):
 class TestingConfig(Configuration):
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://admin:admin@db:5432/test_university_db"
+    SQLALCHEMY_TEST_DATABASE_URI = os.environ.get("SQLALCHEMY_TEST_DATABASE_URI")
 
 
 class Config(str, Enum):
